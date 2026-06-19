@@ -1,10 +1,10 @@
-Elius Virtual Operator Task - Debug
+Elius Virtual Operator Task - Job
 -----
 
 
 Description
 -----
-Debug Process Task for Elius Virtual Operator.
+Job Process Task for Elius Virtual Operator.
 
 
 
