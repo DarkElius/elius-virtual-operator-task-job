@@ -33,7 +33,7 @@ import elius.virtualoperator.task.job.flow.JobFlowBetaSystems;
 
 
 
-public class JobProcessBetaSystems  implements TaskProcess {
+public class JobProcessBetaSystems implements TaskProcess {
 	
 	// Get logger
 	private static Logger logger = LogManager.getLogger(JobProcessBetaSystems.class);
