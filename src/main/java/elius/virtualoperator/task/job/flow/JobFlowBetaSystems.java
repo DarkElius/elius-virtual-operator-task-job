@@ -129,7 +129,7 @@ public class JobFlowBetaSystems extends JobFlow {
 		// Select search entries repository for the specified job type: default is open
 		switch(jobType) {
 			
-			case OPEN:
+			case EJM:
 				repo = JobSearchRepositoryAttributes.SEARCH_ENTRIES_JOB_SCRIPT;
 				break;
 

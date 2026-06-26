@@ -21,7 +21,7 @@ package elius.virtualoperator.task.job;
 
 
 public enum JobType {
-	OPEN(0, "Open"), 
+	EJM(0, "EJM"), 
 	MAINFRAME(1, "Maiframe"),
 	UNKNOWN(999, "Unknown");
 	

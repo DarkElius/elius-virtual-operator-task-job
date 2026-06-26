@@ -26,14 +26,13 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import elius.virtualoperator.task.Task;
-import elius.virtualoperator.task.TaskProcess;
 import elius.virtualoperator.task.TaskStatus;
 import elius.virtualoperator.task.job.flow.JobFlowResult;
 import elius.virtualoperator.task.job.flow.JobFlowBetaSystems;
 
 
 
-public class JobProcessBetaSystems implements TaskProcess {
+public class JobProcessBetaSystems {
 	
 	// Get logger
 	private static Logger logger = LogManager.getLogger(JobProcessBetaSystems.class);
@@ -47,38 +46,16 @@ public class JobProcessBetaSystems implements TaskProcess {
 	// Job Type: it drives the search repository
 	private JobType jobType;
 	
-	@Override
-    public String getName() {
-        return "EVO_JOB_BETASYSTEMS";
-    }
 
-	@Override
-    public String getDescription() {
-        return "Job BetaSystems Process for Elius Virtual Operator";
-    }
-
-    @Override
-    public String getVersion() {
-        return "1.0";
-    }	
-	
 	/**
-	 * Constructor 
-	 * @param jobType JobType
+	 * Execute task process
+	 * @param task Task to be executed
+	 * @param jobType Job Types
 	 */
-	public JobProcessBetaSystems(JobType jobType) {
-		
+	public void execute(Task task, JobType jobType) {
+
 		// Set job type
 		this.jobType = jobType;
-		
-		// Set default if it's unknown
-		if(JobType.UNKNOWN == this.jobType) 
-			this.jobType = JobType.OPEN;
-	}
-
-	
-	@Override
-	public void execute(Task task) {
 
 		// Set default value
 		Job job = null;
@@ -159,13 +136,11 @@ public class JobProcessBetaSystems implements TaskProcess {
 	}
 
 	
-	@Override
 	public String getProcessResult() {
 		return pResult;
 	}
 
 	
-	@Override
 	public TaskStatus getTaskStatusResult() {
 		return tStatus;
 	}

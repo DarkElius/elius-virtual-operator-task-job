@@ -1,2 +1,3 @@
 elius.virtualoperator.task.job.JobProcessScript
-elius.virtualoperator.task.job.JobProcessBetaSystems
+elius.virtualoperator.task.job.JobProcessBetaSystemsMainframe
+elius.virtualoperator.task.job.JobProcessBetaSystemsEJM
