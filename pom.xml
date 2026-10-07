@@ -14,7 +14,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <release>21</release>       
+          <release>21</release>
         </configuration>
       </plugin>
 
@@ -39,35 +39,35 @@
             </goals>
           </execution>
         </executions>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
 
   <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<ewaf.version>0.0.2</ewaf.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <ewaf.version>0.0.2</ewaf.version>
     <evot.version>0.0.2</evot.version>
-	</properties>
+  </properties>
 
-	<dependencies>
+  <dependencies>
 
-		<!-- Elius Web Application Framework -->
-		<dependency>
-			<groupId>EliusWebAppFramework</groupId>
-			<artifactId>EliusWebAppFramework</artifactId>
-			<version>${ewaf.version}</version>
+    <!-- Elius Web Application Framework -->
+    <dependency>
+      <groupId>EliusWebAppFramework</groupId>
+      <artifactId>EliusWebAppFramework</artifactId>
+      <version>${ewaf.version}</version>
       <scope>provided</scope>
-		</dependency>
+    </dependency>
 
-		<!-- Elius Virtual Operator Task -->
-		<dependency>
-			<groupId>EliusVirtualOperator</groupId>
-			<artifactId>Task</artifactId>
-			<version>${evot.version}</version>
+    <!-- Elius Virtual Operator Task -->
+    <dependency>
+      <groupId>EliusVirtualOperator</groupId>
+      <artifactId>Task</artifactId>
+      <version>${evot.version}</version>
       <scope>provided</scope>
-		</dependency>
+    </dependency>
 
-  </dependencies>  
+  </dependencies>
 
 </project>
