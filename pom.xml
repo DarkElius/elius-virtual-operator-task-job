@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>EliusVirtualOperator</groupId>
   <artifactId>TaskJob</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2</version>
   <build>
   
     <resources>
@@ -26,9 +26,8 @@
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<ewaf.version>0.0.2-SNAPSHOT</ewaf.version>
-    <evot.version>0.0.1-SNAPSHOT</evot.version>
-    <json.version>20240303</json.version>
+		<ewaf.version>0.0.2</ewaf.version>
+    <evot.version>0.0.2</evot.version>
 	</properties>
 
 	<dependencies>
@@ -48,13 +47,6 @@
 			<version>${evot.version}</version>
       <scope>provided</scope>
 		</dependency>
-    
-		<!-- JSON -->
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>${json.version}</version>
-		</dependency>    
 
   </dependencies>  
 
