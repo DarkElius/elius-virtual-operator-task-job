@@ -69,7 +69,7 @@ public class JobSearchRepository {
 		try {
 			
 			// Initialize reader
-			reader = new BufferedReader(new FileReader(System.getProperty(ApplicationAttributes.APP_PATH) + 
+			reader = new BufferedReader(new FileReader(System.getProperty(ApplicationAttributes.APP_CONFIG_PATH) + 
 														"/" + JobSearchRepositoryAttributes.SEARCH_ENTRIES_REPOSITORY + 
 														"/" + repository));
 			
