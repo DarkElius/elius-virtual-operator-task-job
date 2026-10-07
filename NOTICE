@@ -7,4 +7,6 @@ THIRD-PARTY LIBRARIES / NOTICES
 
 This product bundles or incorporates components from the following third-party projects:
 
-No third-party dependencies found.
+  - JSON in Java (org.json:json:20240303)
+    License: Public Domain
+

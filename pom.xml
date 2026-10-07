@@ -48,6 +48,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <ewaf.version>0.0.2</ewaf.version>
     <evot.version>0.0.2</evot.version>
+    <json.version>20240303</json.version>
   </properties>
 
   <dependencies>
@@ -66,6 +67,13 @@
       <artifactId>Task</artifactId>
       <version>${evot.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- JSON -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>${json.version}</version>
     </dependency>
 
   </dependencies>
