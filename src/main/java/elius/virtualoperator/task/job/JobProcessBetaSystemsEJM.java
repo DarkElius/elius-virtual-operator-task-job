@@ -20,7 +20,7 @@ public class JobProcessBetaSystemsEJM implements TaskProcess {
 
     @Override
     public String getVersion() {
-        return "1.0";
+        return "0.0.2";
     }
     
   	@Override
