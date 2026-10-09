@@ -131,6 +131,11 @@ public class JobProcessBetaSystems {
 	}
 
 	
+	public JobType getJobType() {
+		return jobType;
+	}
+
+	
 	public String getProcessResult() {
 		return pResult;
 	}
