@@ -54,8 +54,7 @@ public class JobSearchRepository {
 	 */
 	public int load(String repository) {
 		
-		// Log
-		logger.debug("Start read entries from repository(" + JobSearchRepositoryAttributes.SEARCH_ENTRIES_REPOSITORY + "/" + repository + ")");
+		logger.traceEntry("Start read entries from repository={}", JobSearchRepositoryAttributes.SEARCH_ENTRIES_REPOSITORY + "/" + repository);
 		
 		// Save repository name
 		this.repository = repository;
@@ -110,8 +109,7 @@ public class JobSearchRepository {
 			
 		}
 		
-		// Log
-		logger.trace("Entries successfully loaded");
+		logger.traceExit();
 		
 		// Return OK
 		return 0;

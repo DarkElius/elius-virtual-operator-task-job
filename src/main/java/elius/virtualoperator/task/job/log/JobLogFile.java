@@ -75,8 +75,7 @@ public class JobLogFile extends JobLog {
 	@Override
 	public int initialize() {
 		
-		// Log
-		logger.trace("Initialize job log file");
+		logger.traceEntry();
 		
 		// Verify that properties are loaded
 		if(!appProperties.isLoaded())
@@ -91,8 +90,7 @@ public class JobLogFile extends JobLog {
 		// Get Log max size to prevent overload
 		maxLogSize = appProperties.getLong(JobAttributes.PROP_TASK_JOB_LOG_FILE_MAXSIZE, JobAttributes.DEFAULT_TASK_JOB_LOG_FILE_MAXSIZE);
 		
-		// Log
-		logger.debug("Job log file initialized");
+		logger.traceExit();
 		
 		return 0;
 	}
@@ -105,23 +103,11 @@ public class JobLogFile extends JobLog {
 	@Override
 	public int fetch() {
 		
-		// Log
-		logger.trace("Fetch job log file");
+		logger.traceEntry();
+
+		// Get file path based on job info, mask and settings
+		job.setUrl(getLogFilePath());
 			
-		// Check if URL is already defined
-		if((null == job.getUrl()) || "".equalsIgnoreCase(job.getUrl())) {
-
-			// Log
-			logger.debug("Job URL is empty");
-
-			// Get file path based on job info, mask and settings
-			job.setUrl(getLogFilePath());
-
-		}
-		
-		// Log
-		logger.debug("Job URL(" + job.getUrl() + ")");
-		
 		// Create File object with URL information
 		File file = new File(job.getUrl());
 		
@@ -157,13 +143,14 @@ public class JobLogFile extends JobLog {
     	Path path = Paths.get(job.getUrl());
     	
 		try {
+	        // Create job step
+	        // Scripts or daemon output in general has one step
 
 			// Set content
 			jobStep.setLog(Files.readAllLines(path, StandardCharsets.UTF_8));
 
-	        // Create job step
-	        // Scripts or daemon output in general has one step
-	        jobStep.setnLines(jobStep.getnLines());
+			// Set the number of lines readed
+	        jobStep.setnLines(jobStep.getLog().size());
 
 	        // Because mono-step, set the same job information
 	        // Name
@@ -183,9 +170,7 @@ public class JobLogFile extends JobLog {
 			return 1;
 		}
 
-		
-		// Log
-		logger.debug("Job log file fetched");
+		logger.traceExit();
 		
 		// Return OK
 		return 0;
@@ -199,9 +184,7 @@ public class JobLogFile extends JobLog {
 	 */
 	public String getLogFilePath() {
 		
-		// Log
-		logger.trace("Get job log file path");
-		
+		logger.traceEntry();
 		
 		// Initialize final path with log mask
 		String filePath = mask;
@@ -214,61 +197,64 @@ public class JobLogFile extends JobLog {
 		
 		// Replace return code
 		filePath = filePath.replaceAll("<rc>", job.getRc());
+
+		// Replace path
+		filePath = filePath.replaceAll("<url>", job.getUrl());
 		
 	
 		// Get calendar instance
 		Calendar calendar = Calendar.getInstance();
 		
 		// Set job start date
-		calendar.setTimeInMillis(job.getStarted().getTime());
-		
-		// Replace start date year
-		filePath = filePath.replaceAll("<st-yyyy>", new SimpleDateFormat("yyyy").format(job.getEnded().getTime()));
-		
-		// Replace start date month
-		filePath = filePath.replaceAll("<st-MM>", new SimpleDateFormat("MM").format(job.getEnded().getTime()));
+		if(null != job.getStarted()) {
+			calendar.setTimeInMillis(job.getStarted().getTime());
+			
+			// Replace start date year
+			filePath = filePath.replaceAll("<st-yyyy>", new SimpleDateFormat("yyyy").format(job.getStarted().getTime()));
+			
+			// Replace start date month
+			filePath = filePath.replaceAll("<st-MM>", new SimpleDateFormat("MM").format(job.getStarted().getTime()));
 
-		// Replace start date day
-		filePath = filePath.replaceAll("<st-dd>", new SimpleDateFormat("dd").format(job.getEnded().getTime()));
-		
-		// Replace start date hours
-		filePath = filePath.replaceAll("<st-HH>", new SimpleDateFormat("HH").format(job.getEnded().getTime()));
-		
-		// Replace start date minutes
-		filePath = filePath.replaceAll("<st-mm>", new SimpleDateFormat("mm").format(job.getEnded().getTime()));
-		
-		// Replace start date seconds
-		filePath = filePath.replaceAll("<st-ss>", new SimpleDateFormat("ss").format(job.getEnded().getTime()));
-		
+			// Replace start date day
+			filePath = filePath.replaceAll("<st-dd>", new SimpleDateFormat("dd").format(job.getStarted().getTime()));
+			
+			// Replace start date hours
+			filePath = filePath.replaceAll("<st-HH>", new SimpleDateFormat("HH").format(job.getStarted().getTime()));
+			
+			// Replace start date minutes
+			filePath = filePath.replaceAll("<st-mm>", new SimpleDateFormat("mm").format(job.getStarted().getTime()));
+			
+			// Replace start date seconds
+			filePath = filePath.replaceAll("<st-ss>", new SimpleDateFormat("ss").format(job.getStarted().getTime()));
+		}		
 		
 		// Set job end date
-		calendar.setTimeInMillis(job.getEnded().getTime());
-		
-		// Replace end date year
-		filePath = filePath.replaceAll("<et-yyyy>", new SimpleDateFormat("yyyy").format(job.getEnded().getTime()));
-		
-		// Replace end date month
-		filePath = filePath.replaceAll("<et-MM>", new SimpleDateFormat("MM").format(job.getEnded().getTime()));
+		if(null != job.getEnded()) {
+			calendar.setTimeInMillis(job.getEnded().getTime());
+			
+			// Replace end date year
+			filePath = filePath.replaceAll("<et-yyyy>", new SimpleDateFormat("yyyy").format(job.getEnded().getTime()));
+			
+			// Replace end date month
+			filePath = filePath.replaceAll("<et-MM>", new SimpleDateFormat("MM").format(job.getEnded().getTime()));
 
-		// Replace end date day
-		filePath = filePath.replaceAll("<et-dd>", new SimpleDateFormat("dd").format(job.getEnded().getTime()));
-		
-		// Replace end date hours
-		filePath = filePath.replaceAll("<et-HH>", new SimpleDateFormat("HH").format(job.getEnded().getTime()));
-		
-		// Replace end date minutes
-		filePath = filePath.replaceAll("<et-mm>", new SimpleDateFormat("mm").format(job.getEnded().getTime()));
-		
-		// Replace end date seconds
-		filePath = filePath.replaceAll("<et-ss>", new SimpleDateFormat("ss").format(job.getEnded().getTime()));
-
+			// Replace end date day
+			filePath = filePath.replaceAll("<et-dd>", new SimpleDateFormat("dd").format(job.getEnded().getTime()));
+			
+			// Replace end date hours
+			filePath = filePath.replaceAll("<et-HH>", new SimpleDateFormat("HH").format(job.getEnded().getTime()));
+			
+			// Replace end date minutes
+			filePath = filePath.replaceAll("<et-mm>", new SimpleDateFormat("mm").format(job.getEnded().getTime()));
+			
+			// Replace end date seconds
+			filePath = filePath.replaceAll("<et-ss>", new SimpleDateFormat("ss").format(job.getEnded().getTime()));
+		}
 		// Add log path
 		filePath = path + "/" + filePath;
 				
-		
-		
-		// Log
-		logger.debug("Job log file path(" + filePath + ")");
+	
+		logger.traceExit("Job log file path={}", filePath);
 		
 		// Return the real job log file path
 		return filePath;

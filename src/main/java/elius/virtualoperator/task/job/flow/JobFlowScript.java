@@ -64,8 +64,8 @@ public class JobFlowScript extends JobFlow {
 	
 	@Override
 	protected void fetchLog() {
-		// Log
-		logger.trace("Fetch Log");
+
+		logger.traceEntry();
 		
 		// Set job
 		JobLogFile jls = new JobLogFile(job);
@@ -88,8 +88,7 @@ public class JobFlowScript extends JobFlow {
 			flowResultMessage = "Unable to fetch log";
 		}
 		
-		// Log
-		logger.debug("Log fetched");
+		logger.traceExit();
 	}
 	
 
@@ -100,8 +99,7 @@ public class JobFlowScript extends JobFlow {
 	@Override
 	protected void searchMessages() {
 		
-		// Log
-		logger.trace("Search messages");
+		logger.traceEntry();
 		
 		// Create repository
 		JobSearchRepository jsRepo = new JobSearchRepository();
@@ -126,14 +124,14 @@ public class JobFlowScript extends JobFlow {
 			
 		}
 
+		logger.traceExit();
 	}
 
 	
 	@Override
 	protected void evaluate() {
 
-		// Log
-		logger.trace("Evaluate");
+		logger.traceEntry();
 		
 		// At least one message found
 		if(jobSearch.getNMatches().size() > 0) {
@@ -141,10 +139,7 @@ public class JobFlowScript extends JobFlow {
 			// Inform that some messages were found in the log
 			flowResultCode = JobFlowResult.WARNING;
 			
-			
-			
 			ObjectMapper objectMapper = new ObjectMapper();
-
 
 			try {
 				
@@ -171,9 +166,7 @@ public class JobFlowScript extends JobFlow {
 			
 		}
 		
-
-	
-		
+		logger.traceExit();		
 	}
 
 	

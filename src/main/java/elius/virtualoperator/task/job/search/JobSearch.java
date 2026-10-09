@@ -42,9 +42,7 @@ public class JobSearch {
 	 */
 	public int search(JobStep jobStep, JobSearchRepository jsRepo) {
 		
-		// Log
-		logger.trace("Search: use repositorty(" + jsRepo.getRepository() + ") for job step("+ jobStep.getName() + ")");
-		
+		logger.traceEntry("Use repositorty={} for job step={}", jsRepo.getRepository(), jobStep.getName());	
 		
 		// Initialize match list
 		if(null == jsMatches)
@@ -94,8 +92,7 @@ public class JobSearch {
 			
 		}
 	
-		// Log
-		logger.debug("Search ended");
+		logger.traceExit();
 		
 		// Return the number of matches
 		return jsMatches.size();

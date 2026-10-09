@@ -57,6 +57,8 @@ public class JobProcessScript  implements TaskProcess {
 	@Override
 	public void execute(Task task) {
 
+		logger.traceEntry();
+
 		// Set default value
 		Job job = null;
 
@@ -127,12 +129,9 @@ public class JobProcessScript  implements TaskProcess {
 				
 			}
 
-		
 		}
 		
-
-		
-			
+		logger.traceExit();
 	}
 
 	
