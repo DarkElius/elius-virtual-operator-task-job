@@ -91,9 +91,7 @@ public class JobSearch {
 			}
 			
 		}
-	
-		logger.traceExit();
-		
+			
 		// Return the number of matches
 		return jsMatches.size();
 	}

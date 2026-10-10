@@ -91,8 +91,6 @@ public class JobLogBetaSystems extends JobLog {
 	 */
 	@Override
 	public int initialize() {
-		
-		logger.traceEntry();
 				
 		// Verify that properties are loaded
 		if(!appProperties.isLoaded())
@@ -110,8 +108,6 @@ public class JobLogBetaSystems extends JobLog {
 		// Password
 		httpCredentials.setPassword(appProperties.get(JobAttributes.PROP_TASK_JOB_LOG_BETASYSTEMS_PASSWORD));
 		
-		logger.traceExit();
-		
 		return 0;
 	}
 
@@ -122,8 +118,6 @@ public class JobLogBetaSystems extends JobLog {
 	 */
 	@Override
 	public int fetch() {
-		
-		logger.traceEntry();
 		
 		// Clear previous data
 		jobSteps.clear();
@@ -157,8 +151,6 @@ public class JobLogBetaSystems extends JobLog {
 			return 2;
 		}
 		
-		logger.traceExit();
-		
 		return 0;
 	}
 	
@@ -181,8 +173,6 @@ public class JobLogBetaSystems extends JobLog {
 	 * @return The URI of job inside the BetaSystems Control
 	 */
 	private String getJobUri() {
-
-		logger.traceEntry();
 		
 		// Initialize job URI
 		String jobUri = "";	
@@ -266,8 +256,6 @@ public class JobLogBetaSystems extends JobLog {
 	 * @return 0 OK, otherwise the error code
 	 */
 	private int getJobStepsInfo(String jobUri) {
-	
-		logger.traceEntry();
 		
 		// Get job info
 		if(0 != httpConnection.get(jobUri, httpCredentials, true))
@@ -350,8 +338,6 @@ public class JobLogBetaSystems extends JobLog {
 			// Return error 
 			return 1;
 		}
-
-		logger.traceExit();
 		
 		return 0;
 	}
@@ -363,8 +349,6 @@ public class JobLogBetaSystems extends JobLog {
 	 * @throws JSONException
 	 */
 	private void parsePages(Object oPages) throws JSONException {
-
-		logger.traceEntry();
 		
 		// Single page or multiple pages
 		if(oPages instanceof JSONObject) {
@@ -401,7 +385,6 @@ public class JobLogBetaSystems extends JobLog {
 			}
 		}
 
-		logger.traceExit();
 	}
 	
 	
@@ -411,8 +394,6 @@ public class JobLogBetaSystems extends JobLog {
 	 * @throws JSONException
 	 */
 	private void parseLines(Object oLines)  throws JSONException {
-
-		logger.traceEntry();
 		
 		// Single page or multiple lines
 		if(oLines instanceof JSONObject) {
@@ -436,6 +417,6 @@ public class JobLogBetaSystems extends JobLog {
 			}
 		}
 
-		logger.traceExit();
 	}
+
 }

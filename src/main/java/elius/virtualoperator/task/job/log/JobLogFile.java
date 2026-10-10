@@ -75,8 +75,6 @@ public class JobLogFile extends JobLog {
 	@Override
 	public int initialize() {
 		
-		logger.traceEntry();
-		
 		// Verify that properties are loaded
 		if(!appProperties.isLoaded())
 			return -1;
@@ -89,9 +87,7 @@ public class JobLogFile extends JobLog {
 		
 		// Get Log max size to prevent overload
 		maxLogSize = appProperties.getLong(JobAttributes.PROP_TASK_JOB_LOG_FILE_MAXSIZE, JobAttributes.DEFAULT_TASK_JOB_LOG_FILE_MAXSIZE);
-		
-		logger.traceExit();
-		
+			
 		return 0;
 	}
 
@@ -102,8 +98,6 @@ public class JobLogFile extends JobLog {
 	 */
 	@Override
 	public int fetch() {
-		
-		logger.traceEntry();
 
 		// Get file path based on job info, mask and settings
 		job.setUrl(getLogFilePath());
@@ -169,9 +163,7 @@ public class JobLogFile extends JobLog {
 			// Return error
 			return 1;
 		}
-
-		logger.traceExit();
-		
+	
 		// Return OK
 		return 0;
 	}
@@ -183,8 +175,6 @@ public class JobLogFile extends JobLog {
 	 * @return Blank in case of errors, otherwise the filename
 	 */
 	public String getLogFilePath() {
-		
-		logger.traceEntry();
 		
 		// Initialize final path with log mask
 		String filePath = mask;
@@ -253,7 +243,6 @@ public class JobLogFile extends JobLog {
 		// Add log path
 		filePath = path + "/" + filePath;
 				
-	
 		logger.traceExit("Job log file path={}", filePath);
 		
 		// Return the real job log file path

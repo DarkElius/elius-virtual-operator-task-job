@@ -73,9 +73,7 @@ public class JobFlowBetaSystems extends JobFlow {
 	
 	@Override
 	protected void fetchLog() {
-
-		logger.traceEntry();
-		
+	
 		// Set job
 		JobLogBetaSystems jlbs = new JobLogBetaSystems(job);
 		
@@ -103,7 +101,6 @@ public class JobFlowBetaSystems extends JobFlow {
 			goNextStep = false;
 		}
 		
-		logger.traceExit();
 	}
 	
 
@@ -113,8 +110,6 @@ public class JobFlowBetaSystems extends JobFlow {
 	
 	@Override
 	protected void searchMessages() {
-		
-		logger.traceEntry();
 		
 		// Create repository
 		JobSearchRepository jsRepo = new JobSearchRepository();
@@ -162,14 +157,11 @@ public class JobFlowBetaSystems extends JobFlow {
 			
 		}
 
-		logger.traceExit();
 	}
 
 	
 	@Override
 	protected void evaluate() {
-
-		logger.traceEntry();
 		
 		// At least one message found
 		if(jobSearch.getNMatches().size() > 0) {
@@ -204,7 +196,6 @@ public class JobFlowBetaSystems extends JobFlow {
 			
 		}
 
-		logger.traceExit();
 	}
 
 	

@@ -109,8 +109,6 @@ public class JobSearchRepository {
 			
 		}
 		
-		logger.traceExit();
-		
 		// Return OK
 		return 0;
 	}

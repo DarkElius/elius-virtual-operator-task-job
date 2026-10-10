@@ -49,7 +49,7 @@ public class JobProcessBetaSystems {
 	 */
 	public void execute(Task task, JobType jobType) {
 
-		logger.traceEntry();
+		logger.traceEntry("task={} jobType={}", task, jobType);
 
 		// Set job type
 		this.jobType = jobType;
@@ -125,8 +125,7 @@ public class JobProcessBetaSystems {
 			}
 
 		}
-		
-		logger.traceExit();			
+
 	}
 
 	
