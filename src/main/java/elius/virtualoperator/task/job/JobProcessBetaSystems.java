@@ -26,7 +26,11 @@ import elius.virtualoperator.task.job.flow.JobFlowResult;
 import elius.virtualoperator.task.job.flow.JobFlowBetaSystems;
 
 
-
+/**
+ * JobProcessBetaSystems.
+ * <p>
+ * Global process for BetaSystems jobs.
+ */
 public class JobProcessBetaSystems {
 	
 	// Get logger
@@ -40,7 +44,12 @@ public class JobProcessBetaSystems {
 	
 	// Job Type: it drives the search repository
 	private JobType jobType;
-	
+
+	/**
+	 * Default constructor.
+	 */
+	public JobProcessBetaSystems() {
+	}
 
 	/**
 	 * Execute task process
@@ -128,17 +137,26 @@ public class JobProcessBetaSystems {
 
 	}
 
-	
+	/**
+	 * Get job Type
+	 * @return The job type
+	 */
 	public JobType getJobType() {
 		return jobType;
 	}
 
-	
+	/**
+	 * Get process result
+	 * @return The process result
+	 */
 	public String getProcessResult() {
 		return pResult;
 	}
 
-	
+	/**
+	 * Get task status result
+	 * @return The task status result
+	 */
 	public TaskStatus getTaskStatusResult() {
 		return tStatus;
 	}

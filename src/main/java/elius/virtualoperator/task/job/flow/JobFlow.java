@@ -16,18 +16,23 @@ package elius.virtualoperator.task.job.flow;
 
 import elius.virtualoperator.task.job.Job;
 
+/**
+ * JobFlow.
+ * <p>
+ * Generic workflow for jobs analysis.
+ */
 public abstract class JobFlow {
 	
-	// Job to be evaluated with the flow
+	/** Job to be evaluated with the flow */
 	protected Job job;
 	
-	// Flow result code
+	/** Flow result code */
 	protected JobFlowResult flowResultCode;
 	
-	// Flow result message
+	/** Flow result message */
 	protected String flowResultMessage;
 	
-	// Go to the next step of the flow
+	/** Go to the next step of the flow */
 	protected boolean goNextStep;
 	
 	
@@ -52,7 +57,6 @@ public abstract class JobFlow {
 	
 	/**
 	 * Start flow execution
-	 * @return 0 OK, otherwise error
 	 */
 	public void run() {
 		

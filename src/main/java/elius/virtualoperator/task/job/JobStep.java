@@ -16,6 +16,11 @@ package elius.virtualoperator.task.job;
 
 import java.util.List;
 
+/**
+ * JobStep.
+ * <p>
+ * Describe the job step.
+ */
 public class JobStep {
 	
 	// Name
@@ -33,8 +38,11 @@ public class JobStep {
 	// Number of log lines
 	private int nLines;
 	
-	
-	
+	/**
+	 * Default constructor.
+	 */
+	public JobStep() {
+	}
 	
 	/**
 	 * Get step name

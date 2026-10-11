@@ -14,10 +14,20 @@
 
 package elius.virtualoperator.task.job;
 
-
+/**
+ * JobType.
+ * <p>
+ * Describe the types of jobs.
+ */
 public enum JobType {
+
+	/** BetaSystems EJM job */
 	EJM(0, "EJM"), 
+
+	/** BetaSystems mainframe job */
 	MAINFRAME(1, "Maiframe"),
+
+	/** Unknown job */
 	UNKNOWN(999, "Unknown");
 	
 	// Status name

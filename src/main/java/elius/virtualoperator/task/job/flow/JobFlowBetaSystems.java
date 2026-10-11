@@ -30,6 +30,12 @@ import elius.virtualoperator.task.job.search.JobSearch;
 import elius.virtualoperator.task.job.search.JobSearchRepository;
 import elius.virtualoperator.task.job.search.JobSearchRepositoryAttributes;
 
+/**
+ * JobFlowBetaSystems.
+ * <p>
+ * Job flow to analize logs from BetaSystems Control.
+ * It works for mainframe and ejm jobs.
+ */
 public class JobFlowBetaSystems extends JobFlow {
 	
 	// Get logger
@@ -48,6 +54,7 @@ public class JobFlowBetaSystems extends JobFlow {
 	/**
 	 * Constructor
 	 * @param job Job
+	 * @param jobType Job type
 	 */
 	public JobFlowBetaSystems(Job job, JobType jobType) {
 		
@@ -63,13 +70,11 @@ public class JobFlowBetaSystems extends JobFlow {
 		jobSearch = new JobSearch();
 		
 	}
-	
 
 
 	@Override
 	protected void checkConditions() {};
 	
-
 	
 	@Override
 	protected void fetchLog() {

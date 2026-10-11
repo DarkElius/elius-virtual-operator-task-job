@@ -27,7 +27,11 @@ import elius.virtualoperator.task.job.flow.JobFlowResult;
 import elius.virtualoperator.task.job.flow.JobFlowScript;
 
 
-
+/**
+ * JobProcessScript.
+ * <p>
+ * Define the task type, description and version for scripts and file in general.
+ */
 public class JobProcessScript  implements TaskProcess {
 	
 	// Get logger
@@ -38,6 +42,12 @@ public class JobProcessScript  implements TaskProcess {
 	
 	// Task Status
 	private TaskStatus tStatus;
+
+	/**
+	 * Default constructor.
+	 */
+	public JobProcessScript() {
+	}
 
 	@Override
     public String getName() {
@@ -131,6 +141,7 @@ public class JobProcessScript  implements TaskProcess {
 
 		}
 		
+		logger.traceExit("status={}", tStatus);
 	}
 
 	

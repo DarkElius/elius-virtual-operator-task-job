@@ -15,41 +15,53 @@
 
 package elius.virtualoperator.task.job;
 
+/**
+ * JobAttributes.
+ * <p>
+ * The Job Process Task attributes.
+ */
 public class JobAttributes {
 	
-	// Default - Application properties file
+	/** Default - Application properties file */
 	public static final String DEFAULT_JOB_PROPERTIES_FILE = "evo-job.properties";
 	
-	// Default - Job script, path where find logs
+	/** Default - Job script, path where find logs */
 	public static final String DEFAULT_TASK_JOB_LOG_FILE_PATH = "/";
 	
-	// Default - Job script filename mask
+	/** Default - Job script filename mask */
 	public static final String DEFAULT_TASK_JOB_LOG_FILE_MASK = "<name>.<id>.log";
 	
-	// Default -  Job script, log max size (bytes): used to prevent overloading when file is too big
+	/** Default -  Job script, log max size (bytes): used to prevent overloading when file is too big */
 	public static final long DEFAULT_TASK_JOB_LOG_FILE_MAXSIZE = 50000000;
 	
 	
-	// Properties - Job script, path where find logs
+	/** Properties - Job script, path where find logs */
 	public static final String PROP_TASK_JOB_LOG_FILE_PATH = "task.job.log.file.path";
 	
-	// Properties - Job script filename mask
+	/** Properties - Job script filename mask */
 	public static final String PROP_TASK_JOB_LOG_FILE_MASK = "task.job.log.file.mask";
 	
-	// Properties -  Job script, log max size (bytes): used to prevent overloading when file is too big
+	/** Properties -  Job script, log max size (bytes): used to prevent overloading when file is too big */
 	public static final String PROP_TASK_JOB_LOG_FILE_MAXSIZE = "task.job.log.file.maxSize";
 	
 	
 
-	// Properties - Base URI service
+	/** Properties - Base URI service */
 	public static final String PROP_TASK_JOB_LOG_BETASYSTEMS_BASE_URI = "task.job.log.betasystems.base.uri";
 	
-	// Properties - URI to select job
+	/** Properties - URI to select job */
 	public static final String PROP_TASK_JOB_LOG_BETASYSTEMS_SELECT_URI = "task.job.log.betasystems.select.uri";
 	
-	// Properties - BetaSystems userId
+	/** Properties - BetaSystems userId */
 	public static final String PROP_TASK_JOB_LOG_BETASYSTEMS_USERID = "task.job.log.betasystems.userId";
 
-	// Properties - BetaSystems password
+	/** Properties - BetaSystems password */
 	public static final String PROP_TASK_JOB_LOG_BETASYSTEMS_PASSWORD = "task.job.log.betasystems.password";
+
+	/**
+	 * Default constructor.
+	 */
+	public JobAttributes() {
+	}
+
 }

@@ -25,6 +25,11 @@ import org.apache.logging.log4j.Logger;
 
 import elius.virtualoperator.task.job.JobStep;
 
+/**
+ * JobSearch.
+ * <p>
+ * This class is used to search messages in the job logs.
+ */
 public class JobSearch {
 
 	// Get logger
@@ -33,6 +38,11 @@ public class JobSearch {
 	// Matches
 	List<JobSearchMatch> jsMatches;
 	
+	/**
+	 * Default constructor.
+	 */
+	public JobSearch() {
+	}
 	
 	/**
 	 * Search matches in the job step log

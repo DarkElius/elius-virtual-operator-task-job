@@ -25,6 +25,11 @@ import org.apache.logging.log4j.Logger;
 
 import elius.webapp.framework.application.ApplicationAttributes;
 
+/**
+ * JobSearchRepository.
+ * <p>
+ * This class load the repository with all the entries to be searched.
+ */
 public class JobSearchRepository {
 	
 	// Get logger
@@ -128,6 +133,7 @@ public class JobSearchRepository {
 	
 	/**
 	 * Get repository name
+	 * @return The repository
 	 */
 	public String getRepository() {
 		return repository;

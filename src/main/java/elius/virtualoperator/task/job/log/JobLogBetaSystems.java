@@ -37,9 +37,14 @@ import elius.webapp.framework.security.secret.SecretCredentials;
 import elius.webapp.framework.http.HttpConnection;
 
 
+/**
+ * JobLogBetaSystems.
+ * <p>
+ * Job log for BetaSystems.
+ */
 public class JobLogBetaSystems extends JobLog {
 	
-	// Get logger
+	/** Get logger */
 	protected static Logger logger = LogManager.getLogger(JobLogBetaSystems.class);	
 
 	// Properties file
@@ -154,14 +159,10 @@ public class JobLogBetaSystems extends JobLog {
 		return 0;
 	}
 	
-	
-	
-	
-	
-	
+
 	/**
 	 * Get the steps of the selected jobs
-	 * @return
+	 * @return The list of job steps
 	 */
 	public List<JobStep> getJobSteps() {
 		return jobSteps;

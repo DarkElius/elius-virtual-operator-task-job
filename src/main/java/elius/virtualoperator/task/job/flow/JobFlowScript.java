@@ -27,6 +27,11 @@ import elius.virtualoperator.task.job.search.JobSearch;
 import elius.virtualoperator.task.job.search.JobSearchRepository;
 import elius.virtualoperator.task.job.search.JobSearchRepositoryAttributes;
 
+/**
+ * JobFlowScript.
+ * <p>
+ * Job flow to analize Scripts.
+ */
 public class JobFlowScript extends JobFlow {
 	
 	// Get logger
@@ -149,6 +154,7 @@ public class JobFlowScript extends JobFlow {
 				// Stop the flow
 				goNextStep = false;
 				
+				logger.error(flowResultMessage, e);
 			}
 		
 		} else {

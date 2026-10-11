@@ -4,9 +4,20 @@ import elius.virtualoperator.task.Task;
 import elius.virtualoperator.task.TaskProcess;
 import elius.virtualoperator.task.TaskStatus;
 
+/**
+ * JobProcessBetaSystemsEJM.
+ * <p>
+ * Define the task type, description and version for BetaSystems EJM jobs.
+ */
 public class JobProcessBetaSystemsEJM implements TaskProcess {
     
     JobProcessBetaSystems jbs = new JobProcessBetaSystems();
+
+    /**
+	 * Default constructor.
+	 */
+	public JobProcessBetaSystemsEJM() {
+	}
 
     @Override
     public String getName() {

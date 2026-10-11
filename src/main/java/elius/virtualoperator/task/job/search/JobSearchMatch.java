@@ -15,6 +15,11 @@
 
 package elius.virtualoperator.task.job.search;
 
+/**
+ * JobSearchMatch.
+ * <p>
+ * Used by JobSearch to verify job log text lines.
+ */
 public class JobSearchMatch {
 
 	// Search regEx
@@ -26,7 +31,12 @@ public class JobSearchMatch {
 	// Free label where the message was found
 	private String label;
 	
-	
+	/**
+	 * Default constructor.
+	 */
+	public JobSearchMatch() {
+	}
+
 	/**
 	 * Get regular expression
 	 * @return Regular expression

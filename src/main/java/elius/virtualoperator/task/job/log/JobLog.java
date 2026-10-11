@@ -21,12 +21,17 @@ import java.util.List;
 import elius.virtualoperator.task.job.Job;
 import elius.virtualoperator.task.job.JobStep;
 
+/**
+ * JobLog.
+ * <p>
+ * Job log abstract definition.
+ */
 public abstract class JobLog {
 	
-	// Job to be evaluated with the flow
+	/** Job to be evaluated with the flow */
 	protected Job job;
 	
-	// Job steps
+	/** Job steps */
 	protected List<JobStep> jobSteps;
 	
 	

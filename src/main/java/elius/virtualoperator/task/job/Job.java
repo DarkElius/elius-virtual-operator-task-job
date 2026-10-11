@@ -19,37 +19,47 @@ import java.sql.Timestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Job.
+ * <p>
+ * The job object.
+ */
 public class Job {
 
-	// Name
+	/** Name */
 	@JsonProperty("name")
 	private String name;
 	
-	// Id
+	/** Id */
 	@JsonProperty("id")
 	private String id;
 	
-	// Start timestamp
+	/** Start timestamp */
 	@JsonProperty("started")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp started;
 	
-	// End timestamp
+	/** End timestamp */
 	@JsonProperty("ended")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp ended;
 	
-	// Return code
+	/** Return code */
 	@JsonProperty("rc")
 	private String rc;
 	
-	// URL where find the job
+	/** URL where find the job */
 	@JsonProperty("url")
 	private String url;
 	
+	/**
+	 * Default constructor.
+	 */
+	public Job() {
+	}
 	
 	/**
-	 * Get job name
+	 * Get job name.
 	 * @return Job name
 	 */
 	public String getName() {
@@ -58,7 +68,7 @@ public class Job {
 	
 
 	/**
-	 * Set job name
+	 * Set job name.
 	 * @param name Name
 	 */
 	public void setName(String name) {
@@ -67,7 +77,7 @@ public class Job {
 
 	
 	/**
-	 * Get job id
+	 * Get job id.
 	 * @return Job id
 	 */
 	public String getId() {
@@ -76,7 +86,7 @@ public class Job {
 	
 
 	/**
-	 * Set job id
+	 * Set job id.
 	 * @param id Job id
 	 */
 	public void setId(String id) {
@@ -85,7 +95,7 @@ public class Job {
 
 	
 	/**
-	 * Get job start timestamp
+	 * Get job start timestamp.
 	 * @return Job start timestamp
 	 */
 	public Timestamp getStarted() {
@@ -94,7 +104,7 @@ public class Job {
 	
 
 	/**
-	 * Set job start timestamp
+	 * Set job start timestamp.
 	 * @param started Job start timestamp
 	 */
 	public void setStarted(Timestamp started) {
@@ -103,7 +113,7 @@ public class Job {
 
 	
 	/**
-	 * Get job end timestamp
+	 * Get job end timestamp.
 	 * @return Job end timestamp
 	 */
 	public Timestamp getEnded() {
@@ -112,7 +122,7 @@ public class Job {
 	
 
 	/**
-	 * Set job end timestamp
+	 * Set job end timestamp.
 	 * @param ended Job end timestamp
 	 */
 	public void setEnded(Timestamp ended) {
@@ -121,7 +131,7 @@ public class Job {
 
 	
 	/**
-	 * Get job return code
+	 * Get job return code.
 	 * @return Job return code
 	 */
 	public String getRc() {
@@ -130,7 +140,7 @@ public class Job {
 	
 
 	/**
-	 * Set job return code
+	 * Set job return code.
 	 * @param rc Job return code
 	 */
 	public void setRc(String rc) {
@@ -139,7 +149,7 @@ public class Job {
 
 	
 	/**
-	 * Get job URL
+	 * Get job URL.
 	 * @return Job URL
 	 */
 	public String getUrl() {
@@ -148,7 +158,7 @@ public class Job {
 	
 
 	/**
-	 * Set job URL
+	 * Set job URL.
 	 * @param url Job URL
 	 */
 	public void setUrl(String url) {

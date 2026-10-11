@@ -1,81 +1,134 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>EliusVirtualOperator</groupId>
-  <artifactId>TaskJob</artifactId>
-  <version>0.0.2</version>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>EliusVirtualOperator</groupId>
+	<artifactId>TaskJob</artifactId>
+	<version>0.0.2</version>
 
-  <build>
-    <!-- Compiler -->
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <release>21</release>
-        </configuration>
-      </plugin>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
 
-      <!-- NOTICE -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>2.4.0</version>
+	<developers>
+		<developer>
+			<name>Elia Milioni</name>
+			<organization>DarkElius</organization>
+			<organizationUrl>https://github.com/DarkElius</organizationUrl>
+		</developer>
+	</developers>
 
-        <configuration>
-          <thirdPartyFilename>NOTICE</thirdPartyFilename>
-          <excludedScopes>test,provided</excludedScopes>
-          <fileTemplate>${project.basedir}/src/main/resources/license/third-party-template.ftl</fileTemplate>
-          <outputDirectory>${project.basedir}</outputDirectory>
-        </configuration>
+	<scm>
+		<connection>scm:git:https://github.com/DarkElius/elius-virtual-operator-task-job.git</connection>
+		<developerConnection>scm:git:https://github.com/DarkElius/elius-virtual-operator-task-job.git</developerConnection>
+		<url>https://github.com/DarkElius/elius-virtual-operator-task-job/tree/main</url>
+	</scm>
 
-        <executions>
-          <execution>
-            <id>generate-notice</id>
-            <goals>
-              <goal>add-third-party</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+	<build>
+		<plugins>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <ewaf.version>0.0.2</ewaf.version>
-    <evot.version>0.0.2</evot.version>
-    <json.version>20240303</json.version>
-  </properties>
+			<!-- Compiler -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>21</release>
+				</configuration>
+			</plugin>
 
-  <dependencies>
+			<!-- Java Source -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.4.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-    <!-- Elius Web Application Framework -->
-    <dependency>
-      <groupId>EliusWebAppFramework</groupId>
-      <artifactId>EliusWebAppFramework</artifactId>
-      <version>${ewaf.version}</version>
-      <scope>provided</scope>
-    </dependency>
+			<!-- Java Doc -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.12.0</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-    <!-- Elius Virtual Operator Task -->
-    <dependency>
-      <groupId>EliusVirtualOperator</groupId>
-      <artifactId>Task</artifactId>
-      <version>${evot.version}</version>
-      <scope>provided</scope>
-    </dependency>
+			<!-- NOTICE -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>2.4.0</version>
 
-    <!-- JSON -->
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>${json.version}</version>
-    </dependency>
+				<configuration>
+					<thirdPartyFilename>NOTICE</thirdPartyFilename>
+					<excludedScopes>test,provided</excludedScopes>
+					<fileTemplate>
+						${project.basedir}/src/main/resources/license/third-party-template.ftl</fileTemplate>
+					<outputDirectory>${project.basedir}</outputDirectory>
+				</configuration>
 
-  </dependencies>
+				<executions>
+					<execution>
+						<id>generate-notice</id>
+						<goals>
+							<goal>add-third-party</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<ewaf.version>0.0.2</ewaf.version>
+		<evot.version>0.0.2</evot.version>
+		<json.version>20240303</json.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- Elius Web Application Framework -->
+		<dependency>
+			<groupId>EliusWebAppFramework</groupId>
+			<artifactId>EliusWebAppFramework</artifactId>
+			<version>${ewaf.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Elius Virtual Operator Task -->
+		<dependency>
+			<groupId>EliusVirtualOperator</groupId>
+			<artifactId>Task</artifactId>
+			<version>${evot.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+		</dependency>
+
+	</dependencies>
 
 </project>

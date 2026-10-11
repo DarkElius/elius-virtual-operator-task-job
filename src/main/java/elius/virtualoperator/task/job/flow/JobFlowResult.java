@@ -14,11 +14,23 @@
 
 package elius.virtualoperator.task.job.flow;
 
+/**
+ * JobFlowResult.
+ * <p>
+ * Job flow analysis results type.
+ */
 public enum JobFlowResult {
 
-	OK(0, "Ok"), 
+	/** Ended correctly */
+	OK(0, "Ok"),
+	
+	/** Ended with warnings */ 
 	WARNING(4, "Warning"),
+
+	/** Ended in error */
 	ERROR(8, "Error"),
+
+	/** Unknown result */
 	UNKNOWN(999, "Unknown");
 	
 	// Status name

@@ -32,9 +32,14 @@ import elius.virtualoperator.task.job.JobStep;
 import elius.webapp.framework.properties.PropertiesManager;
 import elius.webapp.framework.properties.PropertiesManagerFactory;
 
+/**
+ * JobLogFile.
+ * <p>
+ * Job log for scripts or file in general.
+ */
 public class JobLogFile extends JobLog {
 	
-	// Get logger
+	/** Get logger */
 	protected static Logger logger = LogManager.getLogger(JobLogFile.class);	
 
 	// Properties file

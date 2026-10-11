@@ -15,15 +15,25 @@
 
 package elius.virtualoperator.task.job.search;
 
+/**
+ * JobSearchRepositoryAttributes.
+ * <p>
+ * Application attributes for the Job Process Task.
+ */
 public class JobSearchRepositoryAttributes {
 
-	// Sub-directory where entry files are stored
+	/** Sub-directory where entry files are stored */
 	public static String SEARCH_ENTRIES_REPOSITORY = "search-entries";
 	
-	// Search entries dedicated to script jobs
+	/** Search entries dedicated to script jobs */
 	public static String SEARCH_ENTRIES_JOB_SCRIPT = "job-script.conf";
 
-	// Search entries dedicated to mainframe jobs
+	/** Search entries dedicated to mainframe jobs */
 	public static String SEARCH_ENTRIES_JOB_MAINFRAME = "job-mainframe.conf";
 	
+	/**
+	 * Default constructor.
+	 */
+	public JobSearchRepositoryAttributes() {
+	}
 }
