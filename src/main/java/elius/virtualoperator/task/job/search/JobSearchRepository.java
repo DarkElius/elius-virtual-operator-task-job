@@ -17,6 +17,8 @@ package elius.virtualoperator.task.job.search;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,16 +69,14 @@ public class JobSearchRepository {
 		// Remove previous elements
 		entries.clear();
 		
-		// Reader
-		BufferedReader reader;
+		Path filePath = Path.of(
+			System.getProperty(ApplicationAttributes.APP_CONFIG_PATH),
+			JobSearchRepositoryAttributes.SEARCH_ENTRIES_REPOSITORY,
+			repository
+		);
 
-		try {
-			
-			// Initialize reader
-			reader = new BufferedReader(new FileReader(System.getProperty(ApplicationAttributes.APP_CONFIG_PATH) + 
-														"/" + JobSearchRepositoryAttributes.SEARCH_ENTRIES_REPOSITORY + 
-														"/" + repository));
-			
+		try (BufferedReader reader = Files.newBufferedReader(filePath)) {
+
 			// Read first line
 			String line = reader.readLine();
 
@@ -99,16 +99,12 @@ public class JobSearchRepository {
 				// Read next line
 				line = reader.readLine();
 			}
-
-			// Close file
-			reader.close();
 			
 		} catch (IOException e) {
 			
 			// Error reading file
-			logger.error("Error reading file");
-			// Log Message
-			logger.error(e.getMessage());
+			logger.error("Error reading file: {}", e.getMessage(), e);
+
 			// Set return code
 			return 1;
 			
