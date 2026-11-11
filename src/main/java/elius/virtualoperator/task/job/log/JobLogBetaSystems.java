@@ -20,6 +20,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -174,46 +176,42 @@ public class JobLogBetaSystems extends JobLog {
 		// Initialize job URI
 		String jobUri = "";	
 
-		// Convert timestamps
-		String dateFrom = new SimpleDateFormat("yyyy-MM-dd").format(job.getStarted());
-		// String timeFrom = new SimpleDateFormat("HH:mm:ss").format(job.getStarted());
-		String dateTo = new SimpleDateFormat("yyyy-MM-dd").format(job.getEnded());
-		// String timeTo = new SimpleDateFormat("HH:mm:ss").format(job.getEnded());
-		
-		// Prepare URI
-		String uri = selectUri;
-		
-		try {
-		    uri += "?p:mode=save"
-				+ "&p:fromdate=" + URLEncoder.encode(dateFrom, StandardCharsets.UTF_8.name())
-//				+ "&p:fromtime=" + URLEncoder.encode(timeFrom, StandardCharsets.UTF_8.name())
-				+ "&p:fromtime="
-				+ "&p:todate=" + URLEncoder.encode(dateTo, StandardCharsets.UTF_8.name())
-//				+ "&p:totime=" + URLEncoder.encode(timeTo, StandardCharsets.UTF_8.name())
-				+ "&p:totime="
-				+ "&p:jobname=" + URLEncoder.encode(job.getName(), StandardCharsets.UTF_8.name())
-				+ "&p:jobid=" + URLEncoder.encode(job.getId(), StandardCharsets.UTF_8.name())
-				+ "&p:joberrt="
-				+ "&p:jobqueue=ALL"
-				+ "&p:jobnetid="
-				+ "&p:ljobname="
-				+ "&p:hostname="
-				+ "&format=json";
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Error encoding jobName={} jobId={} for http call", job.getName(), job.getId(), e);
-		    return "";
-		}
+		// Convert timestamps using modern Java Time API
+        String dateFrom = DateTimeFormatter.ISO_LOCAL_DATE.format(
+            job.getStarted().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        );
+        String dateTo = DateTimeFormatter.ISO_LOCAL_DATE.format(
+            job.getEnded().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        );
+        
+        // Prepare URI safely using modern URLEncoder (no try-catch needed)
+        String uri = selectUri + "?p:mode=save"
+            + "&p:fromdate=" + URLEncoder.encode(dateFrom, StandardCharsets.UTF_8)
+            + "&p:fromtime="
+            + "&p:todate=" + URLEncoder.encode(dateTo, StandardCharsets.UTF_8)
+            + "&p:totime="
+            + "&p:jobname=" + URLEncoder.encode(job.getName(), StandardCharsets.UTF_8)
+            + "&p:jobid=" + URLEncoder.encode(job.getId(), StandardCharsets.UTF_8)
+            + "&p:joberrt="
+            + "&p:jobqueue=ALL"
+            + "&p:jobnetid="
+            + "&p:ljobname="
+            + "&p:hostname="
+            + "&format=json";
+
+        // Get job info
+        if (0 != httpConnection.get(uri, httpCredentials)) {
+            return jobUri;
+        }
 
 		
 		// Get job info
 		if(0 != httpConnection.get(uri, httpCredentials))
-			return jobUri;
-		
-		// Parse JSON from text to object
-		JSONObject jo = new JSONObject(httpConnection.getResponseContent());
-		
+			return jobUri;	
 		
 		try {
+			// Parse JSON from text to object
+			JSONObject jo = new JSONObject(httpConnection.getResponseContent());
 		
 			// Get the item with the job info	
 			JSONObject a4dp = jo.getJSONObject(BETA_RETURN).getJSONObject(BETA_RESULT_TABLE).getJSONObject(BETA_ROW);
@@ -336,67 +334,49 @@ public class JobLogBetaSystems extends JobLog {
 
 	
 	/**
-	 * Parse pages from a4dp JSON Object
-	 * @param oPages Pages object
-	 * @throws JSONException
-	 */
-	private void parsePages(Object oPages) throws JSONException {
-		
-		// Single page or multiple pages
-		if(oPages instanceof JSONObject page) {
+     * Parse pages from a4dp JSON Object
+     * 
+     * @param oPages Pages object
+     * @throws JSONException
+     */
+    private void parsePages(Object oPages) throws JSONException {
+        for (JSONObject page : toJsonObjectList(oPages)) {
+            if (page.has(BETA_LINE)) {
+                parseLines(page.get(BETA_LINE));
+            }
+        }
+    }
+    
+    /**
+     * Parse lines from a4dp JSON object
+     * 
+     * @param oLines Lines object
+     * @throws JSONException
+     */
+    private void parseLines(Object oLines) throws JSONException {
+        for (JSONObject lineObj : toJsonObjectList(oLines)) {
+            if (lineObj.has(BETA_CONTENT)) {
+                jobLogList.add(lineObj.get(BETA_CONTENT).toString());
+            }
+        }
+    }
 
-			// Child check
-			if(page.has(BETA_LINE)) {
-				// JSON get lines
-				Object oLines = page.get(BETA_LINE);
-				
-				// Parse lines
-				parseLines(oLines);				
-			}
-			
-			
-		} else if(oPages instanceof JSONArray pages) {
-			
-			// Read pages
-			for (int p = 0; p < pages.length(); p++) {
-				
-				// Child check
-				if(pages.getJSONObject(p).has(BETA_LINE)) {
-					// JSON get lines
-					Object oLines = pages.getJSONObject(p).get(BETA_LINE);
-					
-					// Parse lines
-					parseLines(oLines);
-				}				
-			}
-		}
-
-	}
-	
-	
-	/**
-	 * Parse lines from a4dp JSON object
-	 * @param oLines Lines object
-	 * @throws JSONException
-	 */
-	private void parseLines(Object oLines)  throws JSONException {
-		
-		// Single page or multiple lines
-		if(oLines instanceof JSONObject line) {
-
-			if(line.has(BETA_CONTENT))
-				jobLogList.add(line.get(BETA_CONTENT).toString());
-			
-		} else if(oLines instanceof JSONArray lines) {
-			
-			// Read lines
-			for (int l = 0; l < lines.length(); l++) {
-				// Blank lines are note saved
-				if(lines.getJSONObject(l).has(BETA_CONTENT))
-					jobLogList.add(lines.getJSONObject(l).get(BETA_CONTENT).toString());
-			}
-		}
-
-	}
+    /**
+     * Helper method to normalize a JSON object or array into a list of JSONObjects
+     * 
+     * @param obj the object that can be a JSONObject or JSONArray
+     * @return a list of JSONObjects
+     */
+    private List<JSONObject> toJsonObjectList(Object obj) {
+        List<JSONObject> list = new ArrayList<>();
+        if (obj instanceof JSONObject jsonObject) {
+            list.add(jsonObject);
+        } else if (obj instanceof JSONArray jsonArray) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                list.add(jsonArray.getJSONObject(i));
+            }
+        }
+        return list;
+    }
 
 }

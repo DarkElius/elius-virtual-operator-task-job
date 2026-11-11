@@ -135,7 +135,7 @@ public class JobFlowScript extends JobFlow {
 	protected void evaluate() {
 		
 		// At least one message found
-		if(jobSearch.getNMatches().size() > 0) {
+		if(jobSearch.getNMatches().isEmpty()) {
 			
 			// Inform that some messages were found in the log
 			flowResultCode = JobFlowResult.WARNING;
