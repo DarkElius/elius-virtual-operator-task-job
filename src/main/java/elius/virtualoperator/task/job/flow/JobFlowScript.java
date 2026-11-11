@@ -41,7 +41,7 @@ public class JobFlowScript extends JobFlow {
 	private JobStep jobStep;
 	
 	// Job Search match list
-	private JobSearch jobSearch;
+	private final JobSearch jobSearch;
 	
 
 	/**
@@ -63,7 +63,9 @@ public class JobFlowScript extends JobFlow {
 
 
 	@Override
-	protected void checkConditions() {};
+	protected void checkConditions() {
+		throw new UnsupportedOperationException("notImplemented() cannot be performed because must be implemented");
+	}
 	
 
 	
@@ -95,7 +97,9 @@ public class JobFlowScript extends JobFlow {
 	
 
 	@Override
-	protected void checkInstructions() {};
+	protected void checkInstructions() {
+		throw new UnsupportedOperationException("notImplemented() cannot be performed because must be implemented");
+	}
 
 	
 	@Override
@@ -168,6 +172,8 @@ public class JobFlowScript extends JobFlow {
 
 	
 	@Override
-	protected void doActions() {};
+	protected void doActions() {
+		throw new UnsupportedOperationException("notImplemented() cannot be performed because must be implemented");
+	}
 
 }

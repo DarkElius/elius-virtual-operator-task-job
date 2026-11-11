@@ -47,6 +47,7 @@ public class JobProcessScript  implements TaskProcess {
 	 * Default constructor.
 	 */
 	public JobProcessScript() {
+		/* Nothing to initialize */
 	}
 
 	@Override

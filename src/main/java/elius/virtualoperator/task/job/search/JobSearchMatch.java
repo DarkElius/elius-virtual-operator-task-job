@@ -35,6 +35,7 @@ public class JobSearchMatch {
 	 * Default constructor.
 	 */
 	public JobSearchMatch() {
+		/* Nothing to initialize */
 	}
 
 	/**

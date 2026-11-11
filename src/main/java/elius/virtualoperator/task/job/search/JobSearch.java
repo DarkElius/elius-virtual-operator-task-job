@@ -42,6 +42,7 @@ public class JobSearch {
 	 * Default constructor.
 	 */
 	public JobSearch() {
+		/* Nothing to initialize */
 	}
 	
 	/**
@@ -94,7 +95,7 @@ public class JobSearch {
 					jsMatches.add(jsm);
 					
 					// Log
-					logger.trace("Found(" + se + " on line (" + line + ")");
+					logger.trace("Found={} on line={}", se, line);
 					
 				}
 				

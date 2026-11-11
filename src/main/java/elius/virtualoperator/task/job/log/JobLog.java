@@ -39,7 +39,7 @@ public abstract class JobLog {
 	 * Constructor
 	 * @param job Job
 	 */
-	public JobLog(Job job) {
+	protected JobLog(Job job) {
 		
 		// Set job
 		this.job = job;

@@ -36,7 +36,7 @@ public class JobSearchRepository {
 	private static Logger logger = LogManager.getLogger(JobSearchRepository.class);
 
 	// Entries list
-	private List<String> entries;
+	private final List<String> entries;
 	
 	// Repository
 	private String repository;
@@ -93,7 +93,7 @@ public class JobSearchRepository {
 					entries.add(line);
 					
 					// Log read line
-					logger.trace(" > " + line);
+					logger.trace(" > {}", line);
 				}
 					
 				// Read next line

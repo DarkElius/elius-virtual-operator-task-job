@@ -40,7 +40,7 @@ public abstract class JobFlow {
 	 * Constructor
 	 * @param job Job
 	 */
-	public JobFlow(Job job) {
+	protected JobFlow(Job job) {
 		// Set job
 		this.job = job;
 		

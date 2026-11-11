@@ -42,6 +42,7 @@ public class JobStep {
 	 * Default constructor.
 	 */
 	public JobStep() {
+		/* Nothing to initialize */
 	}
 	
 	/**

@@ -20,8 +20,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,20 +44,19 @@ public class JobLogFile extends JobLog {
 	protected static Logger logger = LogManager.getLogger(JobLogFile.class);	
 
 	// Properties file
-	private PropertiesManager appProperties;
+	private final PropertiesManager appProperties;
 	
 	// Path where find logs
-	private String path;
+	private String logsPath;
 	
 	// Filename mask
 	private String mask;
 	
 	// Max log size (bytes)
 	private long maxLogSize;
-	
+
 	// Job step
-	private JobStep jobStep;
-	
+	private final JobStep jobStep;
 	
 	/**
 	 * Constructor
@@ -85,7 +85,7 @@ public class JobLogFile extends JobLog {
 			return -1;
 		
 		// Path where find logs
-		path = appProperties.get(JobAttributes.PROP_TASK_JOB_LOG_FILE_PATH, JobAttributes.DEFAULT_TASK_JOB_LOG_FILE_PATH);
+		logsPath = appProperties.get(JobAttributes.PROP_TASK_JOB_LOG_FILE_PATH, JobAttributes.DEFAULT_TASK_JOB_LOG_FILE_PATH);
 		
 		// Filename mask
 		mask = appProperties.get(JobAttributes.PROP_TASK_JOB_LOG_FILE_MASK, JobAttributes.DEFAULT_TASK_JOB_LOG_FILE_MASK);
@@ -103,18 +103,18 @@ public class JobLogFile extends JobLog {
 	 */
 	@Override
 	public int fetch() {
+		
+		// Get real file name
+		String fileName = getLogFileName();
 
-		// Get file path based on job info, mask and settings
-		job.setUrl(getLogFilePath());
-			
-		// Create File object with URL information
-		File file = new File(job.getUrl());
+		// Create File object with logs path and file name
+		File file = new File(logsPath, fileName);
 		
 		// Check if file exist
 		if (!file.exists()) {
 			
         	// Log the error
-        	logger.error("Job url (" + job.getUrl() + ") not found");
+        	logger.error("Job filename={} not found", fileName);
         	// Return error
         	return 1;
 			
@@ -124,14 +124,14 @@ public class JobLogFile extends JobLog {
         long fileSize = file.length();
         
         // Log file size
-        logger.debug("File size in bytes(" + fileSize + ")");
+        logger.debug("File size={} bytes", fileSize);
         
         
         // Verify if the file is too big and prevent an overload
         if(fileSize > maxLogSize) {
         	
         	// Log the error
-        	logger.error("Log file is too big (bytes): file(" + fileSize + ") limit(" + maxLogSize + ")");
+        	logger.error("Log file is too big (bytes): file={} limit={}", fileSize, maxLogSize);
         	// Return error
         	return 2;
         	
@@ -162,8 +162,7 @@ public class JobLogFile extends JobLog {
 		} catch (IOException e) {
 			
 			// Log error
-			logger.error("Error reading log(" + job.getUrl() + ")");
-			logger.error(e.getMessage());
+			logger.error("Error reading log={}",job.getUrl(), e);
 			
 			// Return error
 			return 1;
@@ -179,79 +178,59 @@ public class JobLogFile extends JobLog {
 	 * Retrieve real job log filename using job info, mask and path
 	 * @return Blank in case of errors, otherwise the filename
 	 */
-	public String getLogFilePath() {
+	public String getLogFileName() {
 		
 		// Initialize final path with log mask
-		String filePath = mask;
+		String fileName = mask;
 
 		// Replace name
-		filePath = filePath.replaceAll("<name>", job.getName());
+		fileName = fileName.replace("<name>", job.getName());
 		
 		// Replace id
-		filePath = filePath.replaceAll("<id>", job.getId());
+		fileName = fileName.replace("<id>", job.getId());
 		
 		// Replace return code
-		filePath = filePath.replaceAll("<rc>", job.getRc());
+		fileName = fileName.replace("<rc>", job.getRc());
 
 		// Replace path
-		filePath = filePath.replaceAll("<url>", job.getUrl());
+		fileName = fileName.replace("<url>", job.getUrl());
 		
-	
-		// Get calendar instance
-		Calendar calendar = Calendar.getInstance();
-		
-		// Set job start date
-		if(null != job.getStarted()) {
-			calendar.setTimeInMillis(job.getStarted().getTime());
-			
-			// Replace start date year
-			filePath = filePath.replaceAll("<st-yyyy>", new SimpleDateFormat("yyyy").format(job.getStarted().getTime()));
-			
-			// Replace start date month
-			filePath = filePath.replaceAll("<st-MM>", new SimpleDateFormat("MM").format(job.getStarted().getTime()));
+		// Replace start time
+		if (job.getStarted() != null) {
+			LocalDateTime startTime = LocalDateTime.ofInstant(
+					job.getStarted().toInstant(), 
+					ZoneId.systemDefault()
+			);
 
-			// Replace start date day
-			filePath = filePath.replaceAll("<st-dd>", new SimpleDateFormat("dd").format(job.getStarted().getTime()));
-			
-			// Replace start date hours
-			filePath = filePath.replaceAll("<st-HH>", new SimpleDateFormat("HH").format(job.getStarted().getTime()));
-			
-			// Replace start date minutes
-			filePath = filePath.replaceAll("<st-mm>", new SimpleDateFormat("mm").format(job.getStarted().getTime()));
-			
-			// Replace start date seconds
-			filePath = filePath.replaceAll("<st-ss>", new SimpleDateFormat("ss").format(job.getStarted().getTime()));
-		}		
+			fileName = fileName
+				.replace("<st-yyyy>", DateTimeFormatter.ofPattern("yyyy").format(startTime))
+				.replace("<st-MM>",   DateTimeFormatter.ofPattern("MM").format(startTime))
+				.replace("<st-dd>",   DateTimeFormatter.ofPattern("dd").format(startTime))
+				.replace("<st-HH>",   DateTimeFormatter.ofPattern("HH").format(startTime))
+				.replace("<st-mm>",   DateTimeFormatter.ofPattern("mm").format(startTime))
+				.replace("<st-ss>",   DateTimeFormatter.ofPattern("ss").format(startTime));
+		}	
 		
-		// Set job end date
-		if(null != job.getEnded()) {
-			calendar.setTimeInMillis(job.getEnded().getTime());
-			
-			// Replace end date year
-			filePath = filePath.replaceAll("<et-yyyy>", new SimpleDateFormat("yyyy").format(job.getEnded().getTime()));
-			
-			// Replace end date month
-			filePath = filePath.replaceAll("<et-MM>", new SimpleDateFormat("MM").format(job.getEnded().getTime()));
+		// Replace end time
+		if (job.getEnded() != null) {
+			LocalDateTime endTime = LocalDateTime.ofInstant(
+					job.getEnded().toInstant(), 
+					ZoneId.systemDefault()
+			);
 
-			// Replace end date day
-			filePath = filePath.replaceAll("<et-dd>", new SimpleDateFormat("dd").format(job.getEnded().getTime()));
-			
-			// Replace end date hours
-			filePath = filePath.replaceAll("<et-HH>", new SimpleDateFormat("HH").format(job.getEnded().getTime()));
-			
-			// Replace end date minutes
-			filePath = filePath.replaceAll("<et-mm>", new SimpleDateFormat("mm").format(job.getEnded().getTime()));
-			
-			// Replace end date seconds
-			filePath = filePath.replaceAll("<et-ss>", new SimpleDateFormat("ss").format(job.getEnded().getTime()));
+			fileName = fileName
+				.replace("<et-yyyy>", DateTimeFormatter.ofPattern("yyyy").format(endTime))
+				.replace("<et-MM>",   DateTimeFormatter.ofPattern("MM").format(endTime))
+				.replace("<et-dd>",   DateTimeFormatter.ofPattern("dd").format(endTime))
+				.replace("<et-HH>",   DateTimeFormatter.ofPattern("HH").format(endTime))
+				.replace("<et-mm>",   DateTimeFormatter.ofPattern("mm").format(endTime))
+				.replace("<et-ss>",   DateTimeFormatter.ofPattern("ss").format(endTime));
 		}
-		// Add log path
-		filePath = path + "/" + filePath;
-				
-		logger.traceExit("Job log file path={}", filePath);
+
+		logger.traceExit("Job log fileName={}", fileName);
 		
 		// Return the real job log file path
-		return filePath;
+		return fileName;
 		
 	}
 
@@ -264,7 +243,5 @@ public class JobLogFile extends JobLog {
 	public JobStep getJobStep() {
 		return jobStep;
 	}
-	
-	
 
 }

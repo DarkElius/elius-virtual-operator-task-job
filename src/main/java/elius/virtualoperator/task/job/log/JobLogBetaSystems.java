@@ -48,10 +48,7 @@ public class JobLogBetaSystems extends JobLog {
 	protected static Logger logger = LogManager.getLogger(JobLogBetaSystems.class);	
 
 	// Properties file
-	private PropertiesManager appProperties;
-	
-	// Job steps
-	private List<JobStep> jobSteps;
+	private final PropertiesManager appProperties;
 	
 	// Base URI
 	private String baseUri;
@@ -60,13 +57,22 @@ public class JobLogBetaSystems extends JobLog {
 	private String selectUri;
 	
 	// HTTP Connection 
-	private HttpConnection httpConnection;
+	private final HttpConnection httpConnection;
 	
 	// HTTP Credentials
-	private SecretCredentials httpCredentials;
+	private final SecretCredentials httpCredentials;
 	
 	// Step lines
 	List<String> jobLogList;
+
+	// Tags
+	private static String BETA_RETURN = "a4dp:return";
+	private static String BETA_LINE = "a4dp:line";
+	private static String BETA_ROW = "a4dp:row";
+	private static String BETA_COL = "a4dp:col";
+	private static String BETA_PAGE = "a4dp:page";
+	private static String BETA_CONTENT = "content";
+	private static String BETA_RESULT_TABLE = "RESULT_TABLE";
 	
 	
 	/**
@@ -133,24 +139,14 @@ public class JobLogBetaSystems extends JobLog {
 		
 		// Check for errors
 		if("".equals(jobUri)) {
-			logger.error("Error getting job URI for " + 
-							job.getName() + "." + 
-							job.getId() + "." +
-							job.getRc() + "." +
-							job.getStarted() + "." +
-							job.getEnded());
+			logger.error("Error getting job URI for {}", job);
 			// Return error
 			return 1;
 		}
 		
 		// Get Steps
 		if(0 != getJobStepsInfo(jobUri)) {
-			logger.error("Error getting step info for " + 
-					job.getName() + "." + 
-					job.getId() + "." +
-					job.getRc() + "." +
-					job.getStarted() + "." +
-					job.getEnded());
+			logger.error("Error getting step info for {}", job);
 			
 			// Return error
 			return 2;
@@ -180,9 +176,9 @@ public class JobLogBetaSystems extends JobLog {
 
 		// Convert timestamps
 		String dateFrom = new SimpleDateFormat("yyyy-MM-dd").format(job.getStarted());
-		//String timeFrom = new SimpleDateFormat("HH:mm:ss").format(job.getStarted());
+		// String timeFrom = new SimpleDateFormat("HH:mm:ss").format(job.getStarted());
 		String dateTo = new SimpleDateFormat("yyyy-MM-dd").format(job.getEnded());
-		//String timeTo = new SimpleDateFormat("HH:mm:ss").format(job.getEnded());
+		// String timeTo = new SimpleDateFormat("HH:mm:ss").format(job.getEnded());
 		
 		// Prepare URI
 		String uri = selectUri;
@@ -204,15 +200,13 @@ public class JobLogBetaSystems extends JobLog {
 				+ "&p:hostname="
 				+ "&format=json";
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Errror encoding jobName(" + job.getName() + ") jobId(" + job.getId() + ") for http call");
-		    logger.error(e.getMessage());
+			logger.error("Error encoding jobName={} jobId={} for http call", job.getName(), job.getId(), e);
 		    return "";
 		}
 
 		
 		// Get job info
-		// TODO move ignore cert on properties
-		if(0 != httpConnection.get(uri, httpCredentials, true))
+		if(0 != httpConnection.get(uri, httpCredentials))
 			return jobUri;
 		
 		// Parse JSON from text to object
@@ -222,10 +216,10 @@ public class JobLogBetaSystems extends JobLog {
 		try {
 		
 			// Get the item with the job info	
-			JSONObject a4dp = jo.getJSONObject("a4dp:return").getJSONObject("RESULT_TABLE").getJSONObject("a4dp:row");
+			JSONObject a4dp = jo.getJSONObject(BETA_RETURN).getJSONObject(BETA_RESULT_TABLE).getJSONObject(BETA_ROW);
 			
 			// Get job details
-			JSONArray ja = a4dp.getJSONArray("a4dp:col");
+			JSONArray ja = a4dp.getJSONArray(BETA_COL);
 			
 			// Read details
 			for (int i = 0; i < ja.length(); i++) {
@@ -234,7 +228,7 @@ public class JobLogBetaSystems extends JobLog {
 				if("URI".equals(ja.getJSONObject(i).get("name"))) {
 					
 					// Set final URI
-					jobUri = baseUri + ja.getJSONObject(i).get("content").toString() + "&format=json";
+					jobUri = baseUri + ja.getJSONObject(i).get(BETA_CONTENT).toString() + "&format=json";
 					
 				}
 				
@@ -250,97 +244,94 @@ public class JobLogBetaSystems extends JobLog {
 		return jobUri;
 	}
 	
-	
+		
 	/**
-	 * Return the job steps list information
+	 * Return the job steps list information.
+	 * 
 	 * @param jobUri The job URI
 	 * @return 0 OK, otherwise the error code
 	 */
 	private int getJobStepsInfo(String jobUri) {
-		
 		// Get job info
-		if(0 != httpConnection.get(jobUri, httpCredentials, true))
+		if (0 != httpConnection.get(jobUri, httpCredentials)) {
 			return 1;
+		}
 		
 		try {
-			// Parse JSON from text to object
 			JSONObject jo = new JSONObject(httpConnection.getResponseContent());
-			// Get the item with the steps info
-			JSONObject a4dp = jo.getJSONObject("a4dp:return").getJSONObject("JOB_LOGTYPES");
-			// Get steps
-			JSONArray ja = a4dp.getJSONArray("a4dp:row");
+			JSONObject a4dp = jo.getJSONObject(BETA_RETURN).getJSONObject("JOB_LOGTYPES");
+			JSONArray ja = a4dp.getJSONArray(BETA_ROW);
 			
-			// Read steps
 			for (int i = 0; i < ja.length(); i++) {
-				// JSON Steps array info
-				JSONArray steps = ja.getJSONObject(i).getJSONArray("a4dp:col");
-				// Job Step item
-				JobStep js = new JobStep();
-				// Temporary variable for StepName creation
-				String stepName = "";
-				
-				// Read all step info
-				for (int s = 0; s < steps.length(); s++) {
-					// Get step info if is present
-					if("URI".equals(steps.getJSONObject(s).get("name"))) {
-						// Set step URI
-						js.setUrl(baseUri + steps.getJSONObject(s).get("content").toString() + "&format=json");
-						
-						// Get step info
-						if(0 == httpConnection.get(js.getUrl(), httpCredentials, true)) {
-							
-							// Output is defined in a single row
-							jobLogList = new ArrayList<String>();
-							
-							// Parse JSON from text to object
-							JSONObject joStep = new JSONObject(httpConnection.getResponseContent());
-							
-							// JSON get pages
-							Object oPages = joStep.getJSONObject("a4dp:return").getJSONObject("RESULT_TABLE").get("a4dp:page");
-							
-							// Parse pages
-							parsePages(oPages);
-							
-							// Set step log
-							js.setLog(jobLogList);	
-						} else {
-							// Warning
-							logger.warn("Unable to get step info from URI (" + js.getUrl() + ")");
-						}
-					}
-					
-					// Get step-name if it's present
-					if("STEPNAME".equals(steps.getJSONObject(s).get("name")) & (steps.getJSONObject(s).has("content"))) {
-						if(!"".equals(stepName))
-							stepName += ".";
-						stepName += steps.getJSONObject(s).get("content").toString();
-					}
-					// Get proc-step if it's present
-					if("PROCSTEP".equals(steps.getJSONObject(s).get("name")) & (steps.getJSONObject(s).has("content"))) {
-						if(!"".equals(stepName))
-							stepName += ".";
-						stepName += steps.getJSONObject(s).get("content").toString();
-					}
-					// Get ddname if it's present
-					if("DDNAME".equals(steps.getJSONObject(s).get("name")) & (steps.getJSONObject(s).has("content"))) {
-						if(!"".equals(stepName))
-							stepName += ".";
-						stepName += steps.getJSONObject(s).get("content").toString();
-					}
-	
-				}
-				// Set complete step-name
-				js.setName(stepName);
-				
-				// Add step info to list
+				JSONObject rowObj = ja.getJSONObject(i);
+				JobStep js = parseJobStep(rowObj);
 				jobSteps.add(js);
 			}
 		} catch (JSONException e) {
-			// Return error 
+			logger.error("Error parsing job steps JSON", e);
 			return 1;
 		}
 		
 		return 0;
+	}
+
+	/**
+	 * Parses a single job step row from the JSON array.
+	 */
+	private JobStep parseJobStep(JSONObject rowObj) {
+		JSONArray steps = rowObj.getJSONArray(BETA_COL);
+		JobStep js = new JobStep();
+		StringBuilder stepNameBuilder = new StringBuilder();
+		
+		for (int s = 0; s < steps.length(); s++) {
+			JSONObject stepCol = steps.getJSONObject(s);
+			String name = stepCol.optString("name");
+			
+			// Handle URI processing
+			if ("URI".equals(name)) {
+				processStepUri(js, stepCol);
+			}
+			
+			// Handle step name components
+			if (isStepNameComponent(name) && stepCol.has(BETA_CONTENT)) {
+				if (stepNameBuilder.isEmpty()) {
+					stepNameBuilder.append('.');
+				}
+				stepNameBuilder.append(stepCol.get(BETA_CONTENT).toString());
+			}
+		}
+		
+		js.setName(stepNameBuilder.toString());
+		return js;
+	}
+
+	/**
+	 * Helper to check if the column represents a step name component.
+	 */
+	private boolean isStepNameComponent(String name) {
+		return "STEPNAME".equals(name) || "PROCSTEP".equals(name) || "DDNAME".equals(name);
+	}
+
+	/**
+	 * Processes the step URI and fetches its logs.
+	 */
+	private void processStepUri(JobStep js, JSONObject stepCol) {
+		String stepUrl = baseUri + stepCol.optString(BETA_CONTENT) + "&format=json";
+		js.setUrl(stepUrl);
+		
+		if (0 == httpConnection.get(stepUrl, httpCredentials)) {
+			jobLogList = new ArrayList<>();
+			try {
+				JSONObject joStep = new JSONObject(httpConnection.getResponseContent());
+				Object oPages = joStep.getJSONObject(BETA_RETURN).getJSONObject(BETA_RESULT_TABLE).get(BETA_PAGE);
+				parsePages(oPages);
+				js.setLog(jobLogList);  
+			} catch (JSONException e) {
+				logger.warn("Failed to parse step log JSON from URI={}", stepUrl, e);
+			}
+		} else {
+			logger.warn("Unable to get step info from URI={}", stepUrl);
+		}
 	}
 
 	
@@ -352,33 +343,27 @@ public class JobLogBetaSystems extends JobLog {
 	private void parsePages(Object oPages) throws JSONException {
 		
 		// Single page or multiple pages
-		if(oPages instanceof JSONObject) {
-			
-			// Convert JSON object
-			JSONObject page = (JSONObject)oPages;
+		if(oPages instanceof JSONObject page) {
 
 			// Child check
-			if(page.has("a4dp:line")) {
+			if(page.has(BETA_LINE)) {
 				// JSON get lines
-				Object oLines = page.get("a4dp:line");
+				Object oLines = page.get(BETA_LINE);
 				
 				// Parse lines
 				parseLines(oLines);				
 			}
 			
 			
-		} else if(oPages instanceof JSONArray) {
-			
-			// Convert object to Array
-			JSONArray pages = (JSONArray)oPages;
+		} else if(oPages instanceof JSONArray pages) {
 			
 			// Read pages
 			for (int p = 0; p < pages.length(); p++) {
 				
 				// Child check
-				if(pages.getJSONObject(p).has("a4dp:line")) {
+				if(pages.getJSONObject(p).has(BETA_LINE)) {
 					// JSON get lines
-					Object oLines = pages.getJSONObject(p).get("a4dp:line");
+					Object oLines = pages.getJSONObject(p).get(BETA_LINE);
 					
 					// Parse lines
 					parseLines(oLines);
@@ -397,24 +382,18 @@ public class JobLogBetaSystems extends JobLog {
 	private void parseLines(Object oLines)  throws JSONException {
 		
 		// Single page or multiple lines
-		if(oLines instanceof JSONObject) {
+		if(oLines instanceof JSONObject line) {
 
-			// Convert JSON object
-			JSONObject line = (JSONObject)oLines;			
-
-			if(line.has("content"))
-				jobLogList.add(line.get("content").toString());
+			if(line.has(BETA_CONTENT))
+				jobLogList.add(line.get(BETA_CONTENT).toString());
 			
-		} else if(oLines instanceof JSONArray) {
-			
-			// Convert object to Array
-			JSONArray lines = (JSONArray)oLines;
+		} else if(oLines instanceof JSONArray lines) {
 			
 			// Read lines
 			for (int l = 0; l < lines.length(); l++) {
 				// Blank lines are note saved
-				if(lines.getJSONObject(l).has("content"))
-					jobLogList.add(lines.getJSONObject(l).get("content").toString());
+				if(lines.getJSONObject(l).has(BETA_CONTENT))
+					jobLogList.add(lines.getJSONObject(l).get(BETA_CONTENT).toString());
 			}
 		}
 

@@ -49,6 +49,7 @@ public class JobProcessBetaSystems {
 	 * Default constructor.
 	 */
 	public JobProcessBetaSystems() {
+		/* Nothing to initialize */
 	}
 
 	/**

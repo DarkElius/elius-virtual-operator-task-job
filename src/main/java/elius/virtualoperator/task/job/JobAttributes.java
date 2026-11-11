@@ -61,7 +61,7 @@ public class JobAttributes {
 	/**
 	 * Default constructor.
 	 */
-	public JobAttributes() {
+	private JobAttributes() {
 	}
 
 }

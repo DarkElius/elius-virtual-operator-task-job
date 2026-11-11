@@ -34,6 +34,6 @@ public class JobSearchRepositoryAttributes {
 	/**
 	 * Default constructor.
 	 */
-	public JobSearchRepositoryAttributes() {
+	private JobSearchRepositoryAttributes() {
 	}
 }

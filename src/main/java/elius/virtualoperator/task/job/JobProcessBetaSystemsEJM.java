@@ -17,6 +17,7 @@ public class JobProcessBetaSystemsEJM implements TaskProcess {
 	 * Default constructor.
 	 */
 	public JobProcessBetaSystemsEJM() {
+        /* Nothing to initialize */
 	}
 
     @Override

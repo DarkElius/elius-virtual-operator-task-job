@@ -56,6 +56,7 @@ public class Job {
 	 * Default constructor.
 	 */
 	public Job() {
+		/* Nothing to initialize */
 	}
 	
 	/**

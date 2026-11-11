@@ -18,6 +18,7 @@ public class JobProcessBetaSystemsMainframe implements TaskProcess {
 	 * Default constructor.
 	 */
 	public JobProcessBetaSystemsMainframe() {
+        /* Nothing to initialize */
 	}
 
     @Override
