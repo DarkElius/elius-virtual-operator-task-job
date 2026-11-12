@@ -96,43 +96,22 @@ public class JobProcessBetaSystems {
 			logger.error(pResult);
 			
 		} else {
-			
-			// Initialize the correct flow
-			JobFlowBetaSystems jfbsm = new JobFlowBetaSystems(job, jobType);
-			
-			// Execute the flow
-			jfbsm.run();
-			
+				
+			// Initialize and execute the correct flow
+        	JobFlowBetaSystems jfbsm = new JobFlowBetaSystems(job, jobType);
+        	jfbsm.run();
+        
 			// Map result codes from flow to task
-			if(JobFlowResult.OK == jfbsm.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.ENDED;			
-				// Set result message
-				pResult = jfbsm.getFlowResultMessage();
-				
-			} else if(JobFlowResult.WARNING == jfbsm.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.WARNING;			
-				// Set result message
-				pResult = jfbsm.getFlowResultMessage();
-				
-			} else if(JobFlowResult.ERROR == jfbsm.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.ERROR;			
-				// Set result message
-				pResult = jfbsm.getFlowResultMessage();
-				
-			} else if(JobFlowResult.UNKNOWN == jfbsm.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.ERROR;	
-				// Set result message
-				pResult = "Flow execution is uncompleted / unknown error";
-				
-			}
+			pResult = jfbsm.getFlowResultMessage();
+			tStatus = switch (jfbsm.getFlowResultCode()) {
+				case JobFlowResult.OK -> TaskStatus.ENDED;
+				case JobFlowResult.WARNING -> TaskStatus.WARNING;
+				case JobFlowResult.ERROR -> TaskStatus.ERROR;
+				default -> {
+					pResult = "Flow execution is uncompleted / unknown error";
+					yield TaskStatus.ERROR;
+				}
+			};
 
 		}
 

@@ -103,43 +103,21 @@ public class JobProcessScript  implements TaskProcess {
 			
 		} else {
 			
-			// Initialize the correct flow
-			JobFlowScript jfs = new JobFlowScript(job);
-			
-			// Execute the flow
-			jfs.run();
-			
+			// Initialize and execute the correct flow
+        	JobFlowScript jfs = new JobFlowScript(job);
+        	jfs.run();
+        
 			// Map result codes from flow to task
-			if(JobFlowResult.OK == jfs.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.ENDED;			
-				// Set result message
-				pResult = jfs.getFlowResultMessage();
-				
-			} else if(JobFlowResult.WARNING == jfs.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.WARNING;			
-				// Set result message
-				pResult = jfs.getFlowResultMessage();
-				
-			} else if(JobFlowResult.ERROR == jfs.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.ERROR;			
-				// Set result message
-				pResult = jfs.getFlowResultMessage();
-				
-			} else if(JobFlowResult.UNKNOWN == jfs.getFlowResultCode()) {
-				
-				// Set result code
-				tStatus = TaskStatus.ERROR;	
-				// Set result message
-				pResult = "Flow execution is uncompleted / unknown error";
-				
-			}
-
+			pResult = jfs.getFlowResultMessage();
+			tStatus = switch (jfs.getFlowResultCode()) {
+				case JobFlowResult.OK -> TaskStatus.ENDED;
+				case JobFlowResult.WARNING -> TaskStatus.WARNING;
+				case JobFlowResult.ERROR -> TaskStatus.ERROR;
+				default -> {
+					pResult = "Flow execution is uncompleted / unknown error";
+					yield TaskStatus.ERROR;
+				}
+			};			
 		}
 		
 		logger.traceExit("status={}", tStatus);
