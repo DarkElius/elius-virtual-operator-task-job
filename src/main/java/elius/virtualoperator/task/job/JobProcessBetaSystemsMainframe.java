@@ -1,18 +1,14 @@
 package elius.virtualoperator.task.job;
 
-import elius.virtualoperator.task.Task;
-import elius.virtualoperator.task.TaskProcess;
-import elius.virtualoperator.task.TaskStatus;
+import elius.virtualoperator.task.job.flow.JobFlow;
+import elius.virtualoperator.task.job.flow.JobFlowBetaSystems;
 
 /**
  * JobProcessBetaSystemsMainframe.
  * <p>
  * Define the task type, description and version for BetaSystems mainframe jobs.
  */
-public class JobProcessBetaSystemsMainframe implements TaskProcess {
-    
-    // Beta Systems Job Process
-    JobProcessBetaSystems jbs = new JobProcessBetaSystems();
+public class JobProcessBetaSystemsMainframe extends AbstractJobTaskProcess {
 
     /**
 	 * Default constructor.
@@ -33,21 +29,11 @@ public class JobProcessBetaSystemsMainframe implements TaskProcess {
 
     @Override
     public String getVersion() {
-        return "0.0.2";
+        return "0.0.3";
     }
     
-  	@Override
-    public void execute(Task task) {
-        jbs.execute(task, JobType.MAINFRAME);
+    @Override
+    protected JobFlow createJobFlow(Job job) {
+        return new JobFlowBetaSystems(job, JobType.EJM);
     }
-
-	@Override
-	public String getProcessResult() {
-		return jbs.getProcessResult();
-	}
-	
-	@Override
-	public TaskStatus getTaskStatusResult() {
-		return jbs.getTaskStatusResult();
-	}   
 }

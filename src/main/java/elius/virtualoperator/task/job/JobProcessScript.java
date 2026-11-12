@@ -14,16 +14,7 @@
 
 package elius.virtualoperator.task.job;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import elius.virtualoperator.task.Task;
-import elius.virtualoperator.task.TaskProcess;
-import elius.virtualoperator.task.TaskStatus;
-import elius.virtualoperator.task.job.flow.JobFlowResult;
+import elius.virtualoperator.task.job.flow.JobFlow;
 import elius.virtualoperator.task.job.flow.JobFlowScript;
 
 
@@ -32,16 +23,7 @@ import elius.virtualoperator.task.job.flow.JobFlowScript;
  * <p>
  * Define the task type, description and version for scripts and file in general.
  */
-public class JobProcessScript  implements TaskProcess {
-	
-	// Get logger
-	private static Logger logger = LogManager.getLogger(JobProcessScript.class);
-	
-	// Process Result
-	private String pResult;
-	
-	// Task Status
-	private TaskStatus tStatus;
+public class JobProcessScript extends AbstractJobTaskProcess {
 
 	/**
 	 * Default constructor.
@@ -62,77 +44,12 @@ public class JobProcessScript  implements TaskProcess {
 
     @Override
     public String getVersion() {
-        return "0.0.2";
+        return "0.0.3";
     }	
 	
 	@Override
-	public void execute(Task task) {
-
-		logger.traceEntry("task={}", task);
-
-		// Set default value
-		Job job = null;
-
-		// Initialize JSON to object converter
-		ObjectMapper objectMapper = new ObjectMapper();
-		
-		try {
-		
-			// Convert JSON task details to object
-			job = objectMapper.readValue(task.getDetails(), Job.class);
-
-		} catch (Exception e) {
-			
-			// Print error
-			logger.error(e.getMessage());
-			
-			// Set invalid object
-			job = null;
-		} 
-		
-		
-		// Verify the conversion
-		if(null == job) {
-			
-			// Set result message
-			pResult = "Invalid data: please check task details";
-			// Set result code
-			tStatus = TaskStatus.ERROR;
-			// Update log
-			logger.error(pResult);
-			
-		} else {
-			
-			// Initialize and execute the correct flow
-        	JobFlowScript jfs = new JobFlowScript(job);
-        	jfs.run();
-        
-			// Map result codes from flow to task
-			pResult = jfs.getFlowResultMessage();
-			tStatus = switch (jfs.getFlowResultCode()) {
-				case JobFlowResult.OK -> TaskStatus.ENDED;
-				case JobFlowResult.WARNING -> TaskStatus.WARNING;
-				case JobFlowResult.ERROR -> TaskStatus.ERROR;
-				default -> {
-					pResult = "Flow execution is uncompleted / unknown error";
-					yield TaskStatus.ERROR;
-				}
-			};			
-		}
-		
-		logger.traceExit("status={}", tStatus);
-	}
-
-	
-	@Override
-	public String getProcessResult() {
-		return pResult;
-	}
-
-	
-	@Override
-	public TaskStatus getTaskStatusResult() {
-		return tStatus;
-	}
+    protected JobFlow createJobFlow(Job job) {
+        return new JobFlowScript(job);
+    }
 
 }
